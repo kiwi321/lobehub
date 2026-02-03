@@ -13,6 +13,10 @@ const client = new Pool({ connectionString: process.env.DATABASE_URL });
 const db = drizzle(client);
 
 const runMigrations = async () => {
+  console.log('[Database] Ensuring pgvector extension is enabled...');
+  await client.query('CREATE EXTENSION IF NOT EXISTS vector');
+  console.log('✅ pgvector extension is ready.');
+
   console.log('[Database] Start to migration...');
   await migrator.migrate(db, {
     migrationsFolder: join(__dirname, './migrations'),
